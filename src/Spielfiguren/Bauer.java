@@ -13,7 +13,7 @@ public class Bauer implements Spielfigur{
 	}
 
 	@Override
-	public int[][] movement(Gameboard gb) {
+	public int[][] movement() {
 		// TODO Auto-generated method stub
 		return validmoves;
 	}

@@ -15,7 +15,7 @@ private int[][] validmoves;
 	}
 	
 	@Override
-	public int[][] movement(Gameboard gb) {
+	public int[][] movement() {
 		// TODO Auto-generated method stub
 		return validmoves;
 	}

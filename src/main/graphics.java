@@ -50,7 +50,7 @@ public class graphics implements ActionListener{
 		myframe.setLayout(new BorderLayout());
 		myframe.setMinimumSize(new Dimension(650,650));
 		board = new Gameboard();
-		board.initGameboard();
+		//board.initGameboard();
 		mypanel = new JPanel();
 		Console = new JPanel();
 		cons = new JTextArea(4,20);
@@ -112,8 +112,10 @@ public class graphics implements ActionListener{
 		int x = tmp / 8;
 		Spielfigur[][] temp = board.getBoard();
 		if(clicked){
-			Gameboard.nextStep(firstclicked[0], firstclicked[1], x, y);
+			System.out.println(""+ firstclicked[0]+ firstclicked[1]+ x+ y);
+			board.nextStep(firstclicked[0], firstclicked[1], x, y);
 			paintGameboard();
+			Gameboard.evaluatevalidmoves(board, x, y);
 			String s = StartGame.checkwinner(temp);
 			if(s != "nowin"){
 				if(s != "unentschieden"){
@@ -132,7 +134,10 @@ public class graphics implements ActionListener{
 		}
 		else{
 			firstclicked = new int[]{x,y};
+			
 			bar[x][y].setBackground(new Color(255,69,0));
+			
+			Gameboard.getvalidmoves(board.getBoard()[x][y]);
 		}
 		clicked = !clicked;
 	}

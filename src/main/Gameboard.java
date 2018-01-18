@@ -24,7 +24,7 @@ public class Gameboard {
 		Player1 = true;
 		for (int i = 0; i < GBWIDTH; i++) {
 			board[1][i] = new Bauer("b");  //inits Black Bauern
-		//	evaluatevalidmoves(this, 1, i);
+			evaluatevalidmoves(this, 1, i);
 		}
 		for(int i = 0; i < 2; i++){
 			int tmp = 0;
@@ -44,23 +44,25 @@ public class Gameboard {
 			board[tmp][5] = new Läufer(stmp);
 			board[tmp][6] = new Springer(stmp);
 			board[tmp][7] = new Turm(stmp);
-			/*evaluatevalidmoves(this, tmp, 0);
+			evaluatevalidmoves(this, tmp, 0);
 			evaluatevalidmoves(this, tmp, 1);
 			evaluatevalidmoves(this, tmp, 2);
 			evaluatevalidmoves(this, tmp, 3);
 			evaluatevalidmoves(this, tmp, 4);
 			evaluatevalidmoves(this, tmp, 5);
 			evaluatevalidmoves(this, tmp, 6);
-			evaluatevalidmoves(this, tmp, 7);*/
+			evaluatevalidmoves(this, tmp, 7);
 		}
 		for (int i = 0; i < GBWIDTH; i++) {
 			board[6][i] = new Bauer("w"); //inits White Bauern
-			//evaluatevalidmoves(this, 6, i);
+			evaluatevalidmoves(this, 6, i);
 		}
 
 	}
 
 	public static void getvalidmoves(Spielfigur sf){
+		if(sf == null)
+			return;
 		int[][] tmp = sf.movement();
 		if(tmp[0] == null)
 			System.out.println("no valid moves available");
@@ -72,12 +74,15 @@ public class Gameboard {
 			}
 		}
 	}
-/*
+
 	public static void evaluatevalidmoves(Gameboard gb, int x, int y){
 		Spielfigur sf = gb.getBoard()[x][y];
 		int[] tmp = new int[2];
 		int[][] moves = new int[30][2];
 		int cnt = 0;
+		
+		if(sf == null)
+			return;
 		
 		switch(sf.getName()){
 
@@ -89,7 +94,8 @@ public class Gameboard {
 					tmp[1] = x-1;
 					if(tmp[0] > 7 ||tmp[0] < 0 || tmp[1] <0 || tmp [1] > 7);
 					else{
-						
+						System.out.println(sf.getSite() + x + y + tmp[1] + tmp[0]);
+						System.out.println(validmove(sf, x,y,tmp[1],tmp[0]));
 						if(validmove(sf, x,y,tmp[1],tmp[0])){
 							
 							moves[cnt] = tmp;
@@ -120,8 +126,7 @@ public class Gameboard {
 		case "D":
 			for (int i = 0; i < 8; i++) {
 				for (int j = 0; j < 8; j++) {
-					System.out.println(sf.getSite() + x + y + j + i);
-					System.out.println(validmove(sf, x,y,j,i));
+					
 					if(validmove(sf, x,y,j,i)){
 						System.out.println("+1");
 						moves[cnt] = new int[]{i,j};
@@ -240,7 +245,7 @@ public class Gameboard {
 		}
 		System.out.println(s);
 	}
-*/
+
 	public void resetBoard(){
 		initGameboard();
 		Player1 = true;
@@ -329,41 +334,48 @@ public class Gameboard {
 		int x = 0;
 		int w = 0;
 		if(z == 0){
-			while((y > 0 ? x > y : x < y)){
-				if (board[i][j+x] != null)
+			while(Math.abs(y) > 0){ //(z < 0 ? x > z : x < z)
+				System.out.println(y);
+				if(y == 0);
+				else if (board[i][j+(y < 0 ? Math.abs(y) : -y)] != null)
 					return false;
-				if(y < 0)
-					x--;
+				if(y > 0)
+					y--;
 				else 
-					x++;
+					y++;
 			}
 			return true;
 		}
 		x = 0;
 		if(y == 0){
-			while((z > 0 ? x > z : x < z)){
-				if (board[i+x][j] != null)
+			while(Math.abs(z) > 0){ //(z < 0 ? x > z : x < z)
+				System.out.println(z);
+				if(z == 0);
+				else if (board[i+(z < 0 ? Math.abs(z) : -z)][j] != null)
 					return false;
-				if(z < 0)
-					x--;
+				if(z > 0)
+					z--;
 				else 
-					x++;
+					z++;
 			}
 			return true;
 		}
-
-		while((y > 0 ? x > y : x < y)){
-			while((z > 0 ? w > z : w < z)){
-				if (board[i+x][j+w] != null)
+		System.out.println(y);
+		System.out.println(z);
+		while(Math.abs(y) > 0){
+			while(Math.abs(z) > 0){
+				if(y == 0  && z == 0);
+				System.out.println(""+ y + z);
+				if (board[i+(z < 0 ? Math.abs(z) : -z)][j+(y < 0 ? Math.abs(y) : -y)] != null)
 					return false;
-				if(y < 0)
-					x--;
+				if(y > 0)
+					y--;
 				else 
-					x++;
-				if(z < 0)
-					w--;
+					y++;
+				if(z > 0)
+					z--;
 				else
-					w++;
+					z++;
 			}
 		}
 		return true;
