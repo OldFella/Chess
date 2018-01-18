@@ -6,6 +6,8 @@ public class Turm implements Spielfigur{
 
 	
 private String wichsite;
+
+private int[][] validmoves;
 	
 	public Turm(String site){
 		
@@ -15,7 +17,7 @@ private String wichsite;
 	@Override
 	public int[][] movement(Gameboard gb) {
 		// TODO Auto-generated method stub
-		return null;
+		return validmoves;
 	}
 
 	@Override
@@ -28,6 +30,10 @@ private String wichsite;
 	public String getSite() {
 		// TODO Auto-generated method stub
 		return wichsite;
+	}
+	
+	public void setmoves(int[][] vm){
+		validmoves = vm;
 	}
 
 }

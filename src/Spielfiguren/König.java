@@ -6,6 +6,8 @@ public class König implements Spielfigur{
 
 	private String wichsite;
 	
+	private int[][] validmoves;
+	
 	public König(String site){
 		
 		wichsite = site;
@@ -13,7 +15,7 @@ public class König implements Spielfigur{
 	@Override
 	public int[][] movement(Gameboard gb) {
 		// TODO Auto-generated method stub
-		return null;
+		return validmoves;
 	}
 
 	@Override
@@ -27,6 +29,9 @@ public class König implements Spielfigur{
 	public String getSite() {
 		// TODO Auto-generated method stub
 		return wichsite;
+	}
+	public void setmoves(int[][] vm){
+		validmoves = vm;
 	}
 
 }
