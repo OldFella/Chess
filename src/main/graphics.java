@@ -12,12 +12,8 @@ import javax.swing.*;
 import Spielfiguren.Spielfigur;
 
 
-public class graphics extends JFrame implements ActionListener{
+public class graphics implements ActionListener{
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
 
 	private int width = 800;
 
