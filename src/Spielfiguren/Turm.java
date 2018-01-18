@@ -13,9 +13,9 @@ private String wichsite;
 	}
 	
 	@Override
-	public void movement(Gameboard gb) {
+	public int[][] movement(Gameboard gb) {
 		// TODO Auto-generated method stub
-		
+		return null;
 	}
 
 	@Override

@@ -4,7 +4,7 @@ import main.Gameboard;
 
 public interface Spielfigur {
 	
-	public void movement(Gameboard gb);
+	public int[][] movement(Gameboard gb);
 	
 	public String getName();
 	

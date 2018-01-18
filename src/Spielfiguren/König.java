@@ -11,9 +11,9 @@ public class König implements Spielfigur{
 		wichsite = site;
 	}
 	@Override
-	public void movement(Gameboard gb) {
+	public int[][] movement(Gameboard gb) {
 		// TODO Auto-generated method stub
-		
+		return null;
 	}
 
 	@Override
