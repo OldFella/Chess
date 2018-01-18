@@ -24,7 +24,7 @@ public class Gameboard {
 		Player1 = true;
 		for (int i = 0; i < GBWIDTH; i++) {
 			board[1][i] = new Bauer("b");  //inits Black Bauern
-			evaluatevalidmoves(1, i);
+		//	evaluatevalidmoves(this, 1, i);
 		}
 		for(int i = 0; i < 2; i++){
 			int tmp = 0;
@@ -44,51 +44,70 @@ public class Gameboard {
 			board[tmp][5] = new Läufer(stmp);
 			board[tmp][6] = new Springer(stmp);
 			board[tmp][7] = new Turm(stmp);
-			evaluatevalidmoves(tmp, 0);
-			evaluatevalidmoves(tmp, 1);
-			evaluatevalidmoves(tmp, 2);
-			evaluatevalidmoves(tmp, 3);
-			evaluatevalidmoves(tmp, 4);
-			evaluatevalidmoves(tmp, 5);
-			evaluatevalidmoves(tmp, 6);
-			evaluatevalidmoves(tmp, 7);
+			/*evaluatevalidmoves(this, tmp, 0);
+			evaluatevalidmoves(this, tmp, 1);
+			evaluatevalidmoves(this, tmp, 2);
+			evaluatevalidmoves(this, tmp, 3);
+			evaluatevalidmoves(this, tmp, 4);
+			evaluatevalidmoves(this, tmp, 5);
+			evaluatevalidmoves(this, tmp, 6);
+			evaluatevalidmoves(this, tmp, 7);*/
 		}
 		for (int i = 0; i < GBWIDTH; i++) {
 			board[6][i] = new Bauer("w"); //inits White Bauern
-			evaluatevalidmoves(6, i);
+			//evaluatevalidmoves(this, 6, i);
 		}
 
 	}
 
-	public static void evaluatevalidmoves(int x, int y){
-		Spielfigur sf = board[x][y];
+	public static void getvalidmoves(Spielfigur sf){
+		int[][] tmp = sf.movement();
+		if(tmp[0] == null)
+			System.out.println("no valid moves available");
+		else{
+			for (int i = 0; i < tmp.length; i++) {
+				if(tmp[i] == null)
+					return;
+				System.out.println("(" + tmp[i][0] + "," + tmp[i][1] + ")");
+			}
+		}
+	}
+/*
+	public static void evaluatevalidmoves(Gameboard gb, int x, int y){
+		Spielfigur sf = gb.getBoard()[x][y];
 		int[] tmp = new int[2];
 		int[][] moves = new int[30][2];
 		int cnt = 0;
+		
 		switch(sf.getName()){
 
 		case "B":
 			if(sf.getSite() == "w"){
+				
 				for (int i = -1; i < 2; i++) {
-					tmp[0] = i+x;
-					tmp[1] = y+1;
-					if(tmp[0] > 7 ||tmp[0] < 0 || tmp[1] <0);
+					tmp[0] = i+y;
+					tmp[1] = x-1;
+					if(tmp[0] > 7 ||tmp[0] < 0 || tmp[1] <0 || tmp [1] > 7);
 					else{
-						if(validmove(sf, x,y,tmp[0],tmp[1])){
+						
+						if(validmove(sf, x,y,tmp[1],tmp[0])){
+							
 							moves[cnt] = tmp;
 							sf.setmoves(moves);
 							cnt++;
+							
 						}
 					}
 				}
 			}
 			else{
 				for (int i = -1; i < 2; i++) {
-					tmp[0] = i+1;
-					tmp[1] = y-1;
-					if(tmp[0] > 7 ||tmp[0] < 0 || tmp[1] > 7);
+					tmp[0] = i+y;
+					tmp[1] = x+1;
+					if(tmp[0] > 7 ||tmp[0] < 0 || tmp[1] <0 || tmp [1] > 7);
 					else{
-						if(validmove(sf, x,y,tmp[0],tmp[1])){
+						if(validmove(sf, x,y,tmp[1],tmp[0])){
+							
 							moves[cnt] = tmp;
 							sf.setmoves(moves);
 							cnt++;
@@ -101,11 +120,11 @@ public class Gameboard {
 		case "D":
 			for (int i = 0; i < 8; i++) {
 				for (int j = 0; j < 8; j++) {
-
-					if(validmove(sf, x,y,i,j)){
-						tmp[0] = i;
-						tmp[1] = j;
-						moves[cnt] = tmp;
+					System.out.println(sf.getSite() + x + y + j + i);
+					System.out.println(validmove(sf, x,y,j,i));
+					if(validmove(sf, x,y,j,i)){
+						System.out.println("+1");
+						moves[cnt] = new int[]{i,j};
 						sf.setmoves(moves);
 						cnt++;
 					}
@@ -122,7 +141,7 @@ public class Gameboard {
 					tmp[1] = j+y;
 					if(tmp[0] > 7 ||tmp[0] < 0 || tmp[1] > 7 || tmp[1] < 0);
 					else{
-						if(validmove(sf, x,y,tmp[0],tmp[1])){
+						if(validmove(sf, y,x,tmp[0],tmp[1])){
 							moves[cnt] = tmp;
 							sf.setmoves(moves);
 							cnt++;
@@ -138,12 +157,12 @@ public class Gameboard {
 				tmp[1] = y+i;
 				if(tmp[0] > 7 ||tmp[0] < 0 || tmp[1] > 7 || tmp[1] < 0);
 				else{
-					if(validmove(sf, x,y,tmp[0],tmp[1])){
+					if(validmove(sf, y,x,tmp[0],tmp[1])){
 						moves[cnt] = tmp;
 						sf.setmoves(moves);
 						cnt++;
 					}
-					if(validmove(sf, x,y,tmp[1],tmp[0])){
+					if(validmove(sf, y,x,tmp[1],tmp[0])){
 						moves[cnt] = tmp;
 						sf.setmoves(moves);
 						cnt++;
@@ -157,7 +176,7 @@ public class Gameboard {
 			for (int i = 0; i < 8; i++) {
 				for (int j = 0; j < 8; j++) {
 
-					if(validmove(sf, x,y,i,j)){
+					if(validmove(sf, y,x,i,j)){
 						tmp[0] = i;
 						tmp[1] = j;
 						moves[cnt] = tmp;
@@ -174,7 +193,7 @@ public class Gameboard {
 			int tmp2 = -2;
 			for(int i = 0; i < 4;i++){
 
-				if(validmove(sf, x,y,tmp1,tmp2)){
+				if(validmove(sf, y,x,tmp1,tmp2)){
 					tmp[0] = tmp1;
 					tmp[1] = tmp2;
 					moves[cnt] = tmp;
@@ -187,7 +206,7 @@ public class Gameboard {
 			}
 			for(int i = 0; i < 4;i++){
 
-				if(validmove(sf, x,y,tmp2,tmp1)){
+				if(validmove(sf, y,x,tmp2,tmp1)){
 					tmp[0] = tmp2;
 					tmp[1] = tmp1;
 					moves[cnt] = tmp;
@@ -200,6 +219,9 @@ public class Gameboard {
 			}
 			break;
 		}
+		
+		moves[cnt] = new int[]{-1,-1};
+		sf.setmoves(moves);
 	}
 
 	public static void printgameboard(){
@@ -218,14 +240,14 @@ public class Gameboard {
 		}
 		System.out.println(s);
 	}
-
+*/
 	public void resetBoard(){
 		initGameboard();
 		Player1 = true;
 	}
 	// takes a Spielfigur and their x-coordinate(j), y -coordinate(i) and the x(l)- and y(k)-coordinate from its destination point
 	private static boolean validmove(Spielfigur sf, int i, int j, int k, int l){
-		if((Player1 && board[i][j].getSite() == "w")||(!Player1 && board[i][j].getSite() == "b"))
+		if((board[i][j] == null ||Player1 && board[i][j].getSite() == "w")||(!Player1 && board[i][j].getSite() == "b"))
 			return false;
 		if(k > 7 || k < 0 || l > 7 || l< 0 || (i == k && j == l))
 			return false;
