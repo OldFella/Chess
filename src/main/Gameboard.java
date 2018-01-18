@@ -24,6 +24,7 @@ public class Gameboard {
 		Player1 = true;
 		for (int i = 0; i < GBWIDTH; i++) {
 			board[1][i] = new Bauer("b");  //inits Black Bauern
+			evaluatevalidmoves(1, i);
 		}
 		for(int i = 0; i < 2; i++){
 			int tmp = 0;
@@ -43,11 +44,162 @@ public class Gameboard {
 			board[tmp][5] = new Läufer(stmp);
 			board[tmp][6] = new Springer(stmp);
 			board[tmp][7] = new Turm(stmp);
+			evaluatevalidmoves(tmp, 0);
+			evaluatevalidmoves(tmp, 1);
+			evaluatevalidmoves(tmp, 2);
+			evaluatevalidmoves(tmp, 3);
+			evaluatevalidmoves(tmp, 4);
+			evaluatevalidmoves(tmp, 5);
+			evaluatevalidmoves(tmp, 6);
+			evaluatevalidmoves(tmp, 7);
 		}
 		for (int i = 0; i < GBWIDTH; i++) {
 			board[6][i] = new Bauer("w"); //inits White Bauern
+			evaluatevalidmoves(6, i);
 		}
 
+	}
+
+	public static void evaluatevalidmoves(int x, int y){
+		Spielfigur sf = board[x][y];
+		int[] tmp = new int[2];
+		int[][] moves = new int[30][2];
+		int cnt = 0;
+		switch(sf.getName()){
+
+		case "B":
+			if(sf.getSite() == "w"){
+				for (int i = -1; i < 2; i++) {
+					tmp[0] = i+x;
+					tmp[1] = y+1;
+					if(tmp[0] > 7 ||tmp[0] < 0 || tmp[1] <0);
+					else{
+						if(validmove(sf, x,y,tmp[0],tmp[1])){
+							moves[cnt] = tmp;
+							sf.setmoves(moves);
+							cnt++;
+						}
+					}
+				}
+			}
+			else{
+				for (int i = -1; i < 2; i++) {
+					tmp[0] = i+1;
+					tmp[1] = y-1;
+					if(tmp[0] > 7 ||tmp[0] < 0 || tmp[1] > 7);
+					else{
+						if(validmove(sf, x,y,tmp[0],tmp[1])){
+							moves[cnt] = tmp;
+							sf.setmoves(moves);
+							cnt++;
+						}
+					}
+				}
+			}
+			break;
+
+		case "D":
+			for (int i = 0; i < 8; i++) {
+				for (int j = 0; j < 8; j++) {
+
+					if(validmove(sf, x,y,i,j)){
+						tmp[0] = i;
+						tmp[1] = j;
+						moves[cnt] = tmp;
+						sf.setmoves(moves);
+						cnt++;
+					}
+				}
+			}
+
+
+			break;
+
+		case "K":
+			for (int i = -1; i < 2; i++) {
+				for(int j = -1; i < 2; i++){
+					tmp[0] = i+x;
+					tmp[1] = j+y;
+					if(tmp[0] > 7 ||tmp[0] < 0 || tmp[1] > 7 || tmp[1] < 0);
+					else{
+						if(validmove(sf, x,y,tmp[0],tmp[1])){
+							moves[cnt] = tmp;
+							sf.setmoves(moves);
+							cnt++;
+						}
+					}
+				}
+			}
+			break;
+
+		case "T":
+			for (int i = -7; i < 8; i++) {
+				tmp[0] = x+i;
+				tmp[1] = y+i;
+				if(tmp[0] > 7 ||tmp[0] < 0 || tmp[1] > 7 || tmp[1] < 0);
+				else{
+					if(validmove(sf, x,y,tmp[0],tmp[1])){
+						moves[cnt] = tmp;
+						sf.setmoves(moves);
+						cnt++;
+					}
+					if(validmove(sf, x,y,tmp[1],tmp[0])){
+						moves[cnt] = tmp;
+						sf.setmoves(moves);
+						cnt++;
+					}
+				}
+
+			}
+			break;
+
+		case "L":
+			for (int i = 0; i < 8; i++) {
+				for (int j = 0; j < 8; j++) {
+
+					if(validmove(sf, x,y,i,j)){
+						tmp[0] = i;
+						tmp[1] = j;
+						moves[cnt] = tmp;
+						sf.setmoves(moves);
+						cnt++;
+					}
+				}
+			}
+
+			break;
+
+		case "S":
+			int tmp1 = -1;
+			int tmp2 = -2;
+			for(int i = 0; i < 4;i++){
+
+				if(validmove(sf, x,y,tmp1,tmp2)){
+					tmp[0] = tmp1;
+					tmp[1] = tmp2;
+					moves[cnt] = tmp;
+					sf.setmoves(moves);
+					cnt++;
+				}
+				if(i % 2 == 0)
+					tmp2 = tmp2*(-1);
+				tmp1 = tmp1*(-1);
+			}
+			for(int i = 0; i < 4;i++){
+
+				if(validmove(sf, x,y,tmp2,tmp1)){
+					tmp[0] = tmp2;
+					tmp[1] = tmp1;
+					moves[cnt] = tmp;
+					sf.setmoves(moves);
+					cnt++;
+				}
+				if(i % 2 == 0)
+					tmp2 = tmp2*(-1);
+				tmp1 = tmp1*(-1);
+			}
+			break;
+		}
 	}
 
 	public static void printgameboard(){
@@ -202,7 +354,7 @@ public class Gameboard {
 	public Spielfigur[][] getBoard(){
 		return board;
 	}
-	
+
 	public boolean getValidTurn(){
 		return validTurn;
 	}

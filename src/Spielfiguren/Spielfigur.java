@@ -9,6 +9,8 @@ public interface Spielfigur {
 	public String getName();
 	
 	public String getSite();
+	
+	public void setmoves(int[][] vm);
 		
 	
 }
