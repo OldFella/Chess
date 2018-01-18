@@ -68,6 +68,7 @@ public class graphics implements ActionListener{
 				bar[i][j].setFocusable(false);
 				bar[i][j].setSelected(false);
 				bar[i][j].addActionListener(this);
+				bar[i][j].setRolloverEnabled(false);
 				mypanel.add(bar[i][j]);
 			}
 		}
