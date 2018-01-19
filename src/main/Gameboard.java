@@ -24,7 +24,7 @@ public class Gameboard {
 		Player1 = true;
 		for (int i = 0; i < GBWIDTH; i++) {
 			board[1][i] = new Bauer("b");  //inits Black Bauern
-			evaluatevalidmoves(this, 1, i);
+
 		}
 		for(int i = 0; i < 2; i++){
 			int tmp = 0;
@@ -44,35 +44,30 @@ public class Gameboard {
 			board[tmp][5] = new Läufer(stmp);
 			board[tmp][6] = new Springer(stmp);
 			board[tmp][7] = new Turm(stmp);
-			evaluatevalidmoves(this, tmp, 0);
-			evaluatevalidmoves(this, tmp, 1);
-			evaluatevalidmoves(this, tmp, 2);
-			evaluatevalidmoves(this, tmp, 3);
-			evaluatevalidmoves(this, tmp, 4);
-			evaluatevalidmoves(this, tmp, 5);
-			evaluatevalidmoves(this, tmp, 6);
-			evaluatevalidmoves(this, tmp, 7);
+
 		}
 		for (int i = 0; i < GBWIDTH; i++) {
 			board[6][i] = new Bauer("w"); //inits White Bauern
-			evaluatevalidmoves(this, 6, i);
+
 		}
+		evaluateall(this);
 
 	}
 
-	public static void getvalidmoves(Spielfigur sf){
+	public static int[][] getvalidmoves(Spielfigur sf){
 		if(sf == null)
-			return;
+			return null;
 		int[][] tmp = sf.movement();
 		if(tmp[0] == null)
 			System.out.println("no valid moves available");
 		else{
 			for (int i = 0; i < tmp.length; i++) {
 				if(tmp[i] == null)
-					return;
+					return null;
 				System.out.println("(" + tmp[i][0] + "," + tmp[i][1] + ")");
 			}
 		}
+		return tmp;
 	}
 
 	public static void evaluateall(Gameboard gb){
@@ -133,7 +128,7 @@ public class Gameboard {
 							//System.out.println(validmove(board[x][y],x,y, tmp[1],tmp[0]));
 							if(validmove(sf, x,y,tmp[1],tmp[0])){
 
-								moves[cnt] = new int[]{y+j,x+i};
+								moves[cnt] = new int[]{y+i,x+j};
 								sf.setmoves(moves);
 								cnt++;
 							}
@@ -160,17 +155,15 @@ public class Gameboard {
 			break;
 
 		case "K":
-			for (int i = -1; i < 2; i++) {
-				for(int j = -1; i < 2; i++){
-					tmp[0] = i+x;
-					tmp[1] = j+y;
-					if(tmp[0] > 7 ||tmp[0] < 0 || tmp[1] > 7 || tmp[1] < 0);
-					else{
-						if(validmove(sf, y,x,tmp[0],tmp[1])){
-							moves[cnt] = tmp;
-							sf.setmoves(moves);
-							cnt++;
-						}
+			for (int i = 0; i < 8; i++) {
+				for (int j = 0; j < 8; j++) {
+
+					if(validmove(sf, x,y,i,j)){
+						tmp[0] = i;
+						tmp[1] = j;
+						moves[cnt] = new int[]{j,i};
+						sf.setmoves(moves);
+						cnt++;
 					}
 				}
 			}
@@ -208,33 +201,17 @@ public class Gameboard {
 			break;
 
 		case "S":
-			int tmp1 = -1;
-			int tmp2 = -2;
-			for(int i = 0; i < 4;i++){
+			for (int i = 0; i < 8; i++) {
+				for (int j = 0; j < 8; j++) {
 
-				if(validmove(sf, x,y,tmp1,tmp2)){
-					tmp[0] = tmp1;
-					tmp[1] = tmp2;
-					moves[cnt] = tmp;
-					sf.setmoves(moves);
-					cnt++;
+					if(validmove(sf, x,y,i,j)){
+						tmp[0] = i;
+						tmp[1] = j;
+						moves[cnt] = new int[]{j,i};
+						sf.setmoves(moves);
+						cnt++;
+					}
 				}
-				if(i % 2 == 0)
-					tmp2 = tmp2*(-1);
-				tmp1 = tmp1*(-1);
-			}
-			for(int i = 0; i < 4;i++){
-
-				if(validmove(sf, x,y,tmp2,tmp1)){
-					tmp[0] = tmp2;
-					tmp[1] = tmp1;
-					moves[cnt] = tmp;
-					sf.setmoves(moves);
-					cnt++;
-				}
-				if(i % 2 == 0)
-					tmp2 = tmp2*(-1);
-				tmp1 = tmp1*(-1);
 			}
 			break;
 		}
@@ -276,7 +253,7 @@ public class Gameboard {
 					if(board[k][l] == null && (k == (i-1)||(k == (i-2) && i == 6&& board[i-1][l] == null)))
 						return true;
 				}
-				if(board[k][l] != null && ((k == (i-1) && l == (j+1))||(k == (i-1) && l == (j-1))))
+				if(board[k][l] != null && board[k][l].getSite() != board[i][j].getSite() &&((k == (i-1) && l == (j+1))||(k == (i-1) && l == (j-1))))
 					return true;
 			}
 			else if(sf.getSite()== "b"){
@@ -285,7 +262,7 @@ public class Gameboard {
 						return true;
 
 				}
-				if(board[k][l] != null && ((k == (i+1) && l == (j+1))||(k == (i+1) && l == (j-1))))
+				if(board[k][l] != null &&board[k][l].getSite() != board[i][j].getSite() && ((k == (i+1) && l == (j+1))||(k == (i+1) && l == (j-1))))
 					return true;
 			} 
 			return false;
@@ -293,7 +270,7 @@ public class Gameboard {
 			return validL(sf,i,j,k,l);
 		case "K":
 			if(board[k][l] == null ||sf.getSite() != board[k][l].getSite()){
-				if(Math.abs(k-i) == 1 || Math.abs(l-j) == 1)
+				if((Math.abs(k-i) == 1 && Math.abs(l-j) == 1) || (Math.abs(l-j) == 1 && Math.abs(k-i) == 0) || (Math.abs(k-i) == 1 && Math.abs(l-j) == 0))
 					return true;
 				else return false;
 			}
@@ -346,16 +323,19 @@ public class Gameboard {
 		int y = j-l;
 		int x = 0;
 		int w = 0;
+
 		if(z == 0){
 			while(Math.abs(y) > 0){ //(z < 0 ? x > z : x < z)
 				//System.out.println(y);
-				if(y == 0);
+				//if(y == 0);
+				if (x == 0);
 				else if (board[i][j+(y < 0 ? Math.abs(y) : -y)] != null)
 					return false;
 				if(y > 0)
 					y--;
 				else 
 					y++;
+				x++;
 			}
 			return true;
 		}
@@ -363,24 +343,33 @@ public class Gameboard {
 		if(y == 0){
 			while(Math.abs(z) > 0){ //(z < 0 ? x > z : x < z)
 				//System.out.println(z);
-				if(z == 0);
+				//if(z == 0);
+				if(x == 0);
 				else if (board[i+(z < 0 ? Math.abs(z) : -z)][j] != null)
 					return false;
 				if(z > 0)
 					z--;
 				else 
 					z++;
+				x++;
 			}
 			return true;
 		}
 		//System.out.println(y);
 		//System.out.println(z);
+		x = 0 ;
+		System.out.println(""+z + y);
 		while(Math.abs(y) > 0){
 			while(Math.abs(z) > 0){
-				if(y == 0  && z == 0);
+				System.out.println(""+z + y);
+				//if(y == 0  && z == 0);
 				//System.out.println(""+ y + z);
-				if (board[i+(z < 0 ? Math.abs(z) : -z)][j+(y < 0 ? Math.abs(y) : -y)] != null)
+				//if(x == 0);
+				//if(x == 0);
+				if (board[i+(z < 0 ? Math.abs(z) : -z)][j+(y < 0 ? Math.abs(y) : -y)] != null && board[i][j].getSite() == board[i+(z < 0 ? Math.abs(z) : -z)][j+(y < 0 ? Math.abs(y) : -y)].getSite())
 					return false;
+				if (board[i+(z < 0 ? Math.abs(z) : -z)][j+(y < 0 ? Math.abs(y) : -y)] != null && board[i][j].getSite() != board[i+(z < 0 ? Math.abs(z) : -z)][j+(y < 0 ? Math.abs(y) : -y)].getSite())
+					x++;
 				if(y > 0)
 					y--;
 				else 
@@ -389,8 +378,12 @@ public class Gameboard {
 					z--;
 				else
 					z++;
+
 			}
 		}
+		System.out.println("x =" +x);
+		if (x > 1)
+			return false;
 		return true;
 	}
 

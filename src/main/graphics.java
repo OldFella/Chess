@@ -137,7 +137,14 @@ public class graphics implements ActionListener{
 			
 			bar[x][y].setBackground(new Color(255,69,0));
 			
-			Gameboard.getvalidmoves(board.getBoard()[x][y]);
+			int[][] valmoves = Gameboard.getvalidmoves(board.getBoard()[x][y]);
+			
+			for (int i = 0; valmoves == null ? false : valmoves[i][1] != -1; i++) {
+				int a = valmoves[i][1];
+				int b = valmoves[i][0];
+				bar[a][b].setBackground(Color.blue);
+			}
+			
 		}
 		clicked = !clicked;
 	}
