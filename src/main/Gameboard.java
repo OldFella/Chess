@@ -10,6 +10,23 @@ public class Gameboard {
 
 	private static Spielfigur[][] board;
 
+	public static boolean isPlayer1() {
+		return Player1;
+	}
+
+	public static void setPlayer1(boolean player1) {
+		Player1 = player1;
+	}
+
+	public void setBoard(Spielfigur[][] board) {
+		Gameboard.board = board;
+	}
+
+	public static void setValidTurn(boolean validTurn) {
+		Gameboard.validTurn = validTurn;
+	}
+
+
 	private static boolean Player1 = true;
 
 	private static boolean validTurn = false;
@@ -389,7 +406,7 @@ public class Gameboard {
 	
 
 	// calcs the next step, inverts the current player
-	public static void nextStep(int i, int j, int k, int l){
+	public void nextStep(int i, int j, int k, int l){
 		if(board[i][j] == null)
 			return;
 		if((board[i][j] == null ||Player1 && board[i][j].getSite() == "w")||(!Player1 && board[i][j].getSite() == "b"))
@@ -400,6 +417,7 @@ public class Gameboard {
 			board[k][l] = board[i][j];
 			board[i][j] = null;
 			Player1 = !Player1;
+			evaluateall(this);
 		}
 		else return;
 

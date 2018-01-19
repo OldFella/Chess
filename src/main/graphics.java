@@ -37,6 +37,7 @@ public class graphics implements ActionListener{
 	
 	private JScrollPane scrol;
 
+	private static Minimax minmax;
 
 
 
@@ -50,6 +51,7 @@ public class graphics implements ActionListener{
 		myframe.setLayout(new BorderLayout());
 		myframe.setMinimumSize(new Dimension(650,650));
 		board = new Gameboard();
+		minmax = new Minimax(board);
 		//board.initGameboard();
 		mypanel = new JPanel();
 		Console = new JPanel();
@@ -133,7 +135,7 @@ public class graphics implements ActionListener{
 			}
 		}
 		else{
-			
+			System.out.println(minmax.getBoard().getBoard()[0][1]);
 			firstclicked = new int[]{x,y};
 			
 			bar[x][y].setBackground(new Color(255,69,0));
