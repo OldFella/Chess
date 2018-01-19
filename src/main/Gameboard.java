@@ -113,7 +113,7 @@ public class Gameboard {
 							//System.out.println("" + x + y);
 							if(validmove(sf, x,y,tmp[1],tmp[0])){
 								System.out.println(tmp[0]);
-								moves[cnt] = new int[]{x-j,y+i};
+								moves[cnt] = new int[]{y+i,x-j};
 								sf.setmoves(moves);
 								cnt++;
 							}
@@ -129,11 +129,11 @@ public class Gameboard {
 						tmp[1] = x+j;
 						if(tmp[0] > 7 ||tmp[0] < 0 || tmp[1] <0 || tmp [1] > 7);
 						else{
-							System.out.println(sf.getSite() + x + y + tmp[1] + tmp[0]);
-							System.out.println(validmove(board[x][y],x,y, tmp[1],tmp[0]));
+							//System.out.println(sf.getSite() + x + y + tmp[1] + tmp[0]);
+							//System.out.println(validmove(board[x][y],x,y, tmp[1],tmp[0]));
 							if(validmove(sf, x,y,tmp[1],tmp[0])){
 
-								moves[cnt] = new int[]{x+j,y+i};
+								moves[cnt] = new int[]{y+j,x+i};
 								sf.setmoves(moves);
 								cnt++;
 							}
@@ -148,7 +148,7 @@ public class Gameboard {
 				for (int j = 0; j < 8; j++) {
 
 					if(validmove(sf, x,y,j,i)){
-						System.out.println("+1");
+						//System.out.println("+1");
 						moves[cnt] = new int[]{i,j};
 						sf.setmoves(moves);
 						cnt++;
@@ -177,23 +177,17 @@ public class Gameboard {
 			break;
 
 		case "T":
-			for (int i = -7; i < 8; i++) {
-				tmp[0] = x+i;
-				tmp[1] = y+i;
-				if(tmp[0] > 7 ||tmp[0] < 0 || tmp[1] > 7 || tmp[1] < 0);
-				else{
-					if(validmove(sf, y,x,tmp[0],tmp[1])){
-						moves[cnt] = tmp;
-						sf.setmoves(moves);
-						cnt++;
-					}
-					if(validmove(sf, y,x,tmp[1],tmp[0])){
-						moves[cnt] = tmp;
+			for (int i = 0; i < 8; i++) {
+				for (int j = 0; j < 8; j++) {
+
+					if(validmove(sf, x,y,i,j)){
+						tmp[0] = i;
+						tmp[1] = j;
+						moves[cnt] = new int[]{j,i};
 						sf.setmoves(moves);
 						cnt++;
 					}
 				}
-
 			}
 			break;
 
@@ -201,7 +195,7 @@ public class Gameboard {
 			for (int i = 0; i < 8; i++) {
 				for (int j = 0; j < 8; j++) {
 
-					if(validmove(sf, y,x,i,j)){
+					if(validmove(sf, x,y,i,j)){
 						tmp[0] = i;
 						tmp[1] = j;
 						moves[cnt] = new int[]{j,i};
@@ -218,7 +212,7 @@ public class Gameboard {
 			int tmp2 = -2;
 			for(int i = 0; i < 4;i++){
 
-				if(validmove(sf, y,x,tmp1,tmp2)){
+				if(validmove(sf, x,y,tmp1,tmp2)){
 					tmp[0] = tmp1;
 					tmp[1] = tmp2;
 					moves[cnt] = tmp;
@@ -231,7 +225,7 @@ public class Gameboard {
 			}
 			for(int i = 0; i < 4;i++){
 
-				if(validmove(sf, y,x,tmp2,tmp1)){
+				if(validmove(sf, x,y,tmp2,tmp1)){
 					tmp[0] = tmp2;
 					tmp[1] = tmp1;
 					moves[cnt] = tmp;
