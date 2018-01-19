@@ -1,6 +1,5 @@
 package Spielfiguren;
 
-import main.Gameboard;
 
 public interface Spielfigur {
 	

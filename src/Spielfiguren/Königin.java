@@ -1,6 +1,5 @@
 package Spielfiguren;
 
-import main.Gameboard;
 
 public class Königin implements Spielfigur{
 
