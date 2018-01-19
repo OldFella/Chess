@@ -115,7 +115,7 @@ public class graphics implements ActionListener{
 			System.out.println(""+ firstclicked[0]+ firstclicked[1]+ x+ y);
 			board.nextStep(firstclicked[0], firstclicked[1], x, y);
 			paintGameboard();
-			Gameboard.evaluatevalidmoves(board, x, y);
+			Gameboard.evaluateall(board);
 			String s = StartGame.checkwinner(temp);
 			if(s != "nowin"){
 				if(s != "unentschieden"){
