@@ -133,6 +133,7 @@ public class graphics implements ActionListener{
 			}
 		}
 		else{
+			
 			firstclicked = new int[]{x,y};
 			
 			bar[x][y].setBackground(new Color(255,69,0));

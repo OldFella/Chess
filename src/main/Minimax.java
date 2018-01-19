@@ -8,9 +8,9 @@ public class Minimax {
 	
 	private int score;
 	
-	public Minimax(Gameboard b){
-
-		board = b;
+	public Minimax(Gameboard b) throws Exception{
+		
+		
 		depth = 5;
 	}
 	
@@ -27,5 +27,6 @@ public class Minimax {
 		
 		return min;
 	}
+	
 
 }
