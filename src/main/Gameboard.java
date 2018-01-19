@@ -386,6 +386,7 @@ public class Gameboard {
 	public boolean getValidTurn(){
 		return validTurn;
 	}
+	
 
 	// calcs the next step, inverts the current player
 	public static void nextStep(int i, int j, int k, int l){
