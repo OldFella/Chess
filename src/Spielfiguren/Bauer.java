@@ -1,7 +1,5 @@
 package Spielfiguren;
 
-import main.Gameboard;
-
 public class Bauer implements Spielfigur{
 	
 	private String wichsite;

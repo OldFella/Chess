@@ -64,7 +64,7 @@ public class Gameboard {
 			for (int i = 0; i < tmp.length; i++) {
 				if(tmp[i] == null)
 					return null;
-				System.out.println("(" + tmp[i][0] + "," + tmp[i][1] + ")");
+				//System.out.println("(" + tmp[i][0] + "," + tmp[i][1] + ")");
 			}
 		}
 		return tmp;
@@ -107,7 +107,7 @@ public class Gameboard {
 
 							//System.out.println("" + x + y);
 							if(validmove(sf, x,y,tmp[1],tmp[0])){
-								System.out.println(tmp[0]);
+								//System.out.println(tmp[0]);
 								moves[cnt] = new int[]{y+i,x-j};
 								sf.setmoves(moves);
 								cnt++;
@@ -322,7 +322,7 @@ public class Gameboard {
 		int z = i-k;
 		int y = j-l;
 		int x = 0;
-		int w = 0;
+		//int w = 0;
 
 		if(z == 0){
 			while(Math.abs(y) > 0){ //(z < 0 ? x > z : x < z)
@@ -358,10 +358,10 @@ public class Gameboard {
 		//System.out.println(y);
 		//System.out.println(z);
 		x = 0 ;
-		System.out.println(""+z + y);
+		//System.out.println(""+z + y);
 		while(Math.abs(y) > 0){
 			while(Math.abs(z) > 0){
-				System.out.println(""+z + y);
+				//System.out.println(""+z + y);
 				//if(y == 0  && z == 0);
 				//System.out.println(""+ y + z);
 				//if(x == 0);
@@ -381,7 +381,7 @@ public class Gameboard {
 
 			}
 		}
-		System.out.println("x =" +x);
+		//System.out.println("x =" +x);
 		if (x > 1)
 			return false;
 		return true;

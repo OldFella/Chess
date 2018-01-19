@@ -112,7 +112,7 @@ public class graphics implements ActionListener{
 		int x = tmp / 8;
 		Spielfigur[][] temp = board.getBoard();
 		if(clicked){
-			System.out.println(""+ firstclicked[0]+ firstclicked[1]+ x+ y);
+			//System.out.println(""+ firstclicked[0]+ firstclicked[1]+ x+ y);
 			board.nextStep(firstclicked[0], firstclicked[1], x, y);
 			paintGameboard();
 			Gameboard.evaluateall(board);
@@ -148,6 +148,8 @@ public class graphics implements ActionListener{
 		}
 		clicked = !clicked;
 	}
+	
+	
 
 	public void paintGameboard(){
 		Spielfigur[][] gb = board.getBoard();
