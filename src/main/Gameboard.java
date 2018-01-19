@@ -322,14 +322,12 @@ public class Gameboard {
 		int z = i-k;
 		int y = j-l;
 		int x = 0;
-		//int w = 0;
-
+		int w = 0;
+		
 		if(z == 0){
-			while(Math.abs(y) > 0){ //(z < 0 ? x > z : x < z)
-				//System.out.println(y);
-				//if(y == 0);
+			while(Math.abs(y) > 0){ 
 				if (x == 0);
-				else if (board[i][j+(y < 0 ? Math.abs(y) : -y)] != null)
+				else if (board[i][j-y] != null)
 					return false;
 				if(y > 0)
 					y--;
@@ -341,11 +339,9 @@ public class Gameboard {
 		}
 		x = 0;
 		if(y == 0){
-			while(Math.abs(z) > 0){ //(z < 0 ? x > z : x < z)
-				//System.out.println(z);
-				//if(z == 0);
+			while(Math.abs(z) > 0){ 
 				if(x == 0);
-				else if (board[i+(z < 0 ? Math.abs(z) : -z)][j] != null)
+				else if (board[i-z][j] != null)
 					return false;
 				if(z > 0)
 					z--;
@@ -355,35 +351,27 @@ public class Gameboard {
 			}
 			return true;
 		}
-		//System.out.println(y);
-		//System.out.println(z);
+
 		x = 0 ;
-		//System.out.println(""+z + y);
-		while(Math.abs(y) > 0){
-			while(Math.abs(z) > 0){
-				//System.out.println(""+z + y);
-				//if(y == 0  && z == 0);
-				//System.out.println(""+ y + z);
-				//if(x == 0);
-				//if(x == 0);
-				if (board[i+(z < 0 ? Math.abs(z) : -z)][j+(y < 0 ? Math.abs(y) : -y)] != null && board[i][j].getSite() == board[i+(z < 0 ? Math.abs(z) : -z)][j+(y < 0 ? Math.abs(y) : -y)].getSite())
+
+		while(Math.abs(y) != Math.abs(x)){
+			while(Math.abs(z) != Math.abs(w)){
+				if(x == 0  && w == 0);
+				
+				else if (board[i+w][j+x] != null) 
 					return false;
-				if (board[i+(z < 0 ? Math.abs(z) : -z)][j+(y < 0 ? Math.abs(y) : -y)] != null && board[i][j].getSite() != board[i+(z < 0 ? Math.abs(z) : -z)][j+(y < 0 ? Math.abs(y) : -y)].getSite())
-					x++;
+		
 				if(y > 0)
-					y--;
+					x--;
 				else 
-					y++;
+					x++;
 				if(z > 0)
-					z--;
+					w--;
 				else
-					z++;
+					w++;
 
 			}
 		}
-		//System.out.println("x =" +x);
-		if (x > 1)
-			return false;
 		return true;
 	}
 
