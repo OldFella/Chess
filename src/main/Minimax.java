@@ -11,12 +11,13 @@ public class Minimax {
 	public Minimax(Gameboard b){
 		
 		board = new Gameboard();
-		
+		/*
 		board.setBoard(b.getBoard().clone());
 		board.nextStep(0, 1, 2, 2);
 		board.setPlayer1(b.getPlayer());
 		board.setValidTurn(b.getValidTurn());
 		System.out.println(board.getBoard()[0][1]);
+		*/
 		depth = 5;
 	}
 	
