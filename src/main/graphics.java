@@ -145,7 +145,7 @@ public class graphics implements ActionListener{
 			for (int i = 0; valmoves == null ? false : valmoves[i][1] != -1; i++) {
 				int a = valmoves[i][1];
 				int b = valmoves[i][0];
-				bar[a][b].setBackground(Color.blue);
+				bar[a][b].setBackground(new Color(65,105,225));
 			}
 			
 		}
