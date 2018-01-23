@@ -137,7 +137,7 @@ public class Gameboard {
 		Spielfigur[][] b = gb.getBoard();
 	//	if(b[x][y] == null || b[x][y].getName() != "K")
 	//		return false;
-		System.out.println(b[x][y].getSite()== "w" ? "b" : "w");
+	//	System.out.println(b[x][y].getSite()== "w" ? "b" : "w");
 		int[][] allmoves = getallsidemoves(gb, b[x][y].getSite() == "w" ? "b" : "w");
 		for(int i = 0; allmoves[i][0] != -1; i++){
 			//System.out.println("i,0: "+allmoves[i][0] + " i,1: "+allmoves[i][1]);
@@ -148,18 +148,23 @@ public class Gameboard {
 		return false;
 	}
 
-	public static boolean calculatecheckmate(Gameboard gb, String s, Spielfigur sf){
+	public static boolean calculatecheckmate(Gameboard gb, String s, int[] arr){
+		int x = arr[0];
+		int y = arr[1];
+		System.out.println("x: " + x + " y: " + y);
+		Spielfigur sf = gb.getBoard()[x][y];
 		if(sf.getName() != "K")
 			return false;
 		int[][] allmoves = getallsidemoves(gb,s);
 		int counter = 0;
-		for (int i = 0; i < allmoves.length; i++) {
+		for (int i = 0; allmoves[i][0] != -1; i++) {
 			for (int j = 0; j < sf.movement().length; j++) {
-				if(allmoves[i][0] == sf.movement()[j][0] &&allmoves[i][1] == sf.movement()[j][1])
+			//	System.out.println("a: " + allmoves[i][1]+ " b: "+allmoves[i][0]);
+				if(allmoves[i][1] == sf.movement()[j][0] &&allmoves[i][0] == sf.movement()[j][1])
 					counter++;
 			}
 		}
-		if(counter-1 == sf.movement().length)
+		if(counter == sf.movement().length)
 			return true;
 		return false;
 	}

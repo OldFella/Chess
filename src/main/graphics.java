@@ -122,13 +122,14 @@ public class graphics implements ActionListener{
 			else{
 				int a =  Gameboard.getKing(board, "b")[0];
 				int b =  Gameboard.getKing(board, "b")[1];
-				System.out.println("a: "+a+" b: "+b);
+				//System.out.println("a: "+a+" b: "+b);
 				if(Gameboard.calculatecheck(board,a ,b)){
 					bar[a][b].setBackground(new Color(255,69,0));
 				}
 			}
 			String s = StartGame.checkwinner(board);
-			if(s != "nowin"){
+		//	System.out.println(Gameboard.calculatecheckmate(board, "w", Gameboard.getKing(board, "b")));
+			if(s != "nowin" || Gameboard.calculatecheckmate(board, "w", Gameboard.getKing(board, "b"))){
 				if(s != "unentschieden"){
 					if(!Gameboard.getPlayer())
 						JOptionPane.showMessageDialog(mypanel, "The Winner is Player 1");
