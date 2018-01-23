@@ -13,8 +13,9 @@ public class StartGame {
  * if the game is finished the loop ends and so the programm
  */
 	// checks if theres a winner and his name
-	public static String checkwinner(Spielfigur[][] sparr){
+	public static String checkwinner(Gameboard gb){
 		String winner = "";
+		Spielfigur[][] sparr = gb.getBoard();
 		for (int i = 0; i < sparr.length; i++) {
 			for (int j = 0; j < sparr[i].length; j++) {
 				if(sparr[i][j] == null);

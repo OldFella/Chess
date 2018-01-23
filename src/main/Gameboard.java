@@ -96,6 +96,75 @@ public class Gameboard {
 		}
 
 	}
+	
+	public static int[] getKing(Gameboard gb, String s){
+		int[] result;
+		for (int i = 0; i < gb.getBoard().length; i++) {
+			for (int j = 0; j < gb.getBoard().length; j++) {
+				Spielfigur sf = gb.getBoard()[i][j];
+				if(sf == null);
+				else if(sf.getName() == "K" && sf.getSite() == s)
+					return result = new int[]{i,j};
+			}
+		}
+		return null;
+	}
+
+	public static int[][] getallsidemoves(Gameboard gb, String s){
+		Spielfigur sf;
+		int[][] result = new int[100][30];
+		int counter = 0;
+		for (int i = 0; i < gb.getBoard().length; i++) {
+			for (int j = 0; j < gb.getBoard().length; j++) {
+				sf = gb.getBoard()[i][j];
+				if (sf == null);
+				else if(sf.getSite() == s){
+					for(int k = 0; sf.movement()[k][1] != -1;k++){
+						result[counter] = sf.movement()[k];
+						counter++;
+						//System.out.println("x: "+sf.movement()[k][0] +" y: " +sf.movement()[k][1]);
+					}
+				}
+			}
+
+		}
+
+		result[counter][0] = -1; 
+		return result;
+	}
+	
+	public static boolean calculatecheck(Gameboard gb, int x, int y){
+		Spielfigur[][] b = gb.getBoard();
+	//	if(b[x][y] == null || b[x][y].getName() != "K")
+	//		return false;
+		System.out.println(b[x][y].getSite()== "w" ? "b" : "w");
+		int[][] allmoves = getallsidemoves(gb, b[x][y].getSite() == "w" ? "b" : "w");
+		for(int i = 0; allmoves[i][0] != -1; i++){
+			//System.out.println("i,0: "+allmoves[i][0] + " i,1: "+allmoves[i][1]);
+			if(allmoves[i][0] == y && allmoves[i][1] == x)
+				return true;
+		}
+		
+		return false;
+	}
+
+	public static boolean calculatecheckmate(Gameboard gb, String s, Spielfigur sf){
+		if(sf.getName() != "K")
+			return false;
+		int[][] allmoves = getallsidemoves(gb,s);
+		int counter = 0;
+		for (int i = 0; i < allmoves.length; i++) {
+			for (int j = 0; j < sf.movement().length; j++) {
+				if(allmoves[i][0] == sf.movement()[j][0] &&allmoves[i][1] == sf.movement()[j][1])
+					counter++;
+			}
+		}
+		if(counter-1 == sf.movement().length)
+			return true;
+		return false;
+	}
+
+
 
 	public static void evaluatevalidmoves(Gameboard gb, int x, int y){
 		Spielfigur sf = gb.getBoard()[x][y];
@@ -258,6 +327,8 @@ public class Gameboard {
 		initGameboard();
 		Player1 = true;
 	}
+
+
 	// takes a Spielfigur and their x-coordinate(j), y -coordinate(i) and the x(l)- and y(k)-coordinate from its destination point
 	private static boolean validmove(Spielfigur sf, int i, int j, int k, int l){
 
@@ -340,7 +411,7 @@ public class Gameboard {
 		int y = j-l;
 		int x = 0;
 		int w = 0;
-		
+
 		if(z == 0){
 			while(Math.abs(y) > 0){ 
 				if (x == 0);
@@ -374,10 +445,10 @@ public class Gameboard {
 		while(Math.abs(y) != Math.abs(x)){
 			while(Math.abs(z) != Math.abs(w)){
 				if(x == 0  && w == 0);
-				
+
 				else if (board[i+w][j+x] != null) 
 					return false;
-		
+
 				if(y > 0)
 					x--;
 				else 
@@ -403,7 +474,7 @@ public class Gameboard {
 	public boolean getValidTurn(){
 		return validTurn;
 	}
-	
+
 
 	// calcs the next step, inverts the current player
 	public void nextStep(int i, int j, int k, int l){

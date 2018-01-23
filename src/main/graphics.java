@@ -26,15 +26,15 @@ public class graphics implements ActionListener{
 	private boolean clicked;
 
 	private Gameboard board;
-	
+
 	private int[] firstclicked;
-	
+
 	private JButton[][] bar;
-	
+
 	private JPanel Console;
-	
+
 	private JTextArea cons;
-	
+
 	private JScrollPane scrol;
 
 	private static Minimax minmax;
@@ -57,13 +57,13 @@ public class graphics implements ActionListener{
 		Console = new JPanel();
 		cons = new JTextArea(4,20);
 		cons.setVisible(true);
-		
+
 		scrol = new JScrollPane(cons);
 		scrol.setVisible(true);
 		Console.add(scrol);
 		myframe.add(Console);
 		bar = new JButton[8][8];
-		
+
 		for (int i = 0; i < bar.length; i++) {
 			for (int j = 0; j < bar.length; j++) {
 				bar[i][j] = new JButton();
@@ -76,18 +76,18 @@ public class graphics implements ActionListener{
 		}
 		paintGameboard();
 		myframe.add(mypanel);
-		
+
 		JMenuBar jmb = new JMenuBar();
 		JMenu menu = new JMenu("Help");
 		JMenuItem menuItem = new JMenuItem("Controls");
 		menu.setMnemonic(KeyEvent.VK_G);
 		menuItem.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				JOptionPane.showMessageDialog(myframe, 
 						"1. Press the Figure you want to move \n" +
-						"2. Press the Field you want to move \n" +
+								"2. Press the Field you want to move \n" +
 						"Black begins");
 				if(mypanel != null){
 					paintGameboard();
@@ -100,25 +100,34 @@ public class graphics implements ActionListener{
 		myframe.setJMenuBar(jmb);
 		myframe.setVisible(true);
 	}
-	
+
 	private void initGame(){
 		clicked = false;
 		board.resetBoard();
 		paintGameboard();
-		
+
 	}
-	
+
 	public void actionPerformed(ActionEvent e){
 		int tmp = Integer.parseInt(e.getActionCommand());
 		int y = tmp % 8;
 		int x = tmp / 8;
-		Spielfigur[][] temp = board.getBoard();
+		//Gameboard temp = board;
 		if(clicked){
 			//System.out.println(""+ firstclicked[0]+ firstclicked[1]+ x+ y);
 			board.nextStep(firstclicked[0], firstclicked[1], x, y);
 			paintGameboard();
 			Gameboard.evaluateall(board);
-			String s = StartGame.checkwinner(temp);
+			if(Gameboard.getKing(board, "b") ==  null);
+			else{
+				int a =  Gameboard.getKing(board, "b")[0];
+				int b =  Gameboard.getKing(board, "b")[1];
+				System.out.println("a: "+a+" b: "+b);
+				if(Gameboard.calculatecheck(board,a ,b)){
+					bar[a][b].setBackground(new Color(255,69,0));
+				}
+			}
+			String s = StartGame.checkwinner(board);
 			if(s != "nowin"){
 				if(s != "unentschieden"){
 					if(!Gameboard.getPlayer())
@@ -130,29 +139,29 @@ public class graphics implements ActionListener{
 					JOptionPane.showMessageDialog(mypanel, "Draw");
 				reset();
 				return;
-				
-				
+
+
 			}
 		}
 		else{
 			System.out.println(minmax.getBoard().getBoard()[0][1]);
 			firstclicked = new int[]{x,y};
-			
+
 			bar[x][y].setBackground(new Color(255,69,0));
-			
+
 			int[][] valmoves = Gameboard.getvalidmoves(board.getBoard()[x][y]);
-			
+
 			for (int i = 0; valmoves == null ? false : valmoves[i][1] != -1; i++) {
 				int a = valmoves[i][1];
 				int b = valmoves[i][0];
 				bar[a][b].setBackground(new Color(65,105,225));
 			}
-			
+
 		}
 		clicked = !clicked;
 	}
-	
-	
+
+
 
 	public void paintGameboard(){
 		Spielfigur[][] gb = board.getBoard();
@@ -163,21 +172,21 @@ public class graphics implements ActionListener{
 		for(int i = 0; i < gb.length;i++){
 			cnt++;
 			for (int j = 0; j < gb.length; j++) {
-				
+
 				bar[i][j].setIcon(null);
 				bar[i][j].setName(""+counter);
 				bar[i][j].setActionCommand(""+counter);
 				bar[i][j].setVerticalAlignment(JButton.CENTER);
 				bar[i][j].setHorizontalAlignment(JButton.CENTER);
-				
-				
+
+
 				if((counter % 2 == 0 && cnt % 2 == 0)|| (counter % 2 == 1 && cnt % 2 == 1)){
 					b = new Color(205,104,57);
 				}
 				else{
 					b = new Color(255,222,173);
 				}
-				
+
 
 				if(gb[i][j] == null);
 
@@ -250,16 +259,16 @@ public class graphics implements ActionListener{
 			}
 
 		}
-		
+
 		myframe.add(mypanel);
 
 	}
-	
+
 
 	private void reset(){
 		initGame();
 	}
-	
+
 
 	private Image getImage(String s){
 
