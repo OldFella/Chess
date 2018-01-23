@@ -10,6 +10,10 @@ public interface Spielfigur {
 	public String getSite();
 	
 	public void setmoves(int[][] vm);
+	
+	public void setmoved();
+	
+	public boolean getmoved();
 		
 	
 }

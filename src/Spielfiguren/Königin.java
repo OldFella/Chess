@@ -6,10 +6,12 @@ public class Königin implements Spielfigur{
 	
 private String wichsite;
 
+private boolean moved;
+
 private int[][] validmoves;
 	
 	public Königin(String site){
-		
+		moved = false;
 		wichsite = site;
 	}
 	@Override
@@ -33,6 +35,16 @@ private int[][] validmoves;
 	
 	public void setmoves(int[][] vm){
 		validmoves = vm;
+	}
+	@Override
+	public void setmoved() {
+		// TODO Auto-generated method stub
+		moved = true;
+	}
+	@Override
+	public boolean getmoved() {
+		// TODO Auto-generated method stub
+		return moved;
 	}
 
 }

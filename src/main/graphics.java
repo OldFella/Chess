@@ -51,6 +51,7 @@ public class graphics implements ActionListener{
 		myframe.setLayout(new BorderLayout());
 		myframe.setMinimumSize(new Dimension(650,650));
 		board = new Gameboard();
+		Gameboard.copy = Gameboard.copyarray(board.getBoard());
 		minmax = new Minimax(board);
 		//board.initGameboard();
 		mypanel = new JPanel();
@@ -107,6 +108,7 @@ public class graphics implements ActionListener{
 		paintGameboard();
 
 	}
+	
 
 	public void actionPerformed(ActionEvent e){
 		int tmp = Integer.parseInt(e.getActionCommand());
@@ -118,10 +120,11 @@ public class graphics implements ActionListener{
 			board.nextStep(firstclicked[0], firstclicked[1], x, y);
 			paintGameboard();
 			Gameboard.evaluateall(board);
-			if(Gameboard.getKing(board, "b") ==  null);
+			if(Gameboard.getFigure(board, "b", "K") ==  null);
 			else{
-				int a =  Gameboard.getKing(board, "b")[0];
-				int b =  Gameboard.getKing(board, "b")[1];
+				int a =  Gameboard.getFigure(board, "b", "K")[0];
+				int b =  Gameboard.getFigure(board, "b", "K")[1];
+				System.out.println(Gameboard.copy[0][0]);
 				//System.out.println("a: "+a+" b: "+b);
 				if(Gameboard.calculatecheck(board,a ,b)){
 					bar[a][b].setBackground(new Color(255,69,0));
@@ -129,7 +132,7 @@ public class graphics implements ActionListener{
 			}
 			String s = StartGame.checkwinner(board);
 		//	System.out.println(Gameboard.calculatecheckmate(board, "w", Gameboard.getKing(board, "b")));
-			if(s != "nowin" || Gameboard.calculatecheckmate(board, "w", Gameboard.getKing(board, "b"))){
+			if(s != "nowin" || Gameboard.calculatecheckmate(board, "w", Gameboard.getFigure(board, "b", "K"))){
 				if(s != "unentschieden"){
 					if(!Gameboard.getPlayer())
 						JOptionPane.showMessageDialog(mypanel, "The Winner is Player 1");
