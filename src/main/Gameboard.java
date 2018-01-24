@@ -72,7 +72,7 @@ public class Gameboard {
 			board[6][i] = new Bauer("w"); //inits White Bauern
 
 		}
-		evaluateall(this);
+		evaluateall(board);
 
 	}
 
@@ -92,21 +92,21 @@ public class Gameboard {
 		return tmp;
 	}
 
-	public static void evaluateall(Gameboard gb){
-		Spielfigur[][] sfar = gb.getBoard();
+	public static void evaluateall(Spielfigur[][] sfar){
+	
 		for (int i = 0; i < sfar.length; i++) {
 			for (int j = 0; j < sfar.length; j++) {
-				evaluatevalidmoves(gb, i, j);
+				evaluatevalidmoves(sfar, i, j);
 			}
 		}
 
 	}
 	
-	public static int[] getFigure(Gameboard gb, String s, String t){
+	public static int[] getFigure(Spielfigur[][] sfar, String s, String t){
 		int[] result;
-		for (int i = 0; i < gb.getBoard().length; i++) {
-			for (int j = 0; j < gb.getBoard().length; j++) {
-				Spielfigur sf = gb.getBoard()[i][j];
+		for (int i = 0; i < sfar.length; i++) {
+			for (int j = 0; j < sfar.length; j++) {
+				Spielfigur sf = sfar[i][j];
 				if(sf == null);
 				else if(sf.getName() == "K" && sf.getSite() == s && sf.getName() == t)
 					return result = new int[]{i,j};
@@ -115,17 +115,20 @@ public class Gameboard {
 		return null;
 	}
 
-	public static int[][] getallsidemoves(Gameboard gb, String s){
+	public static int[][] getallsidemoves(Spielfigur[][] gb, String s){
 		Spielfigur sf;
 		int[][] result = new int[100][30];
 		int counter = 0;
-		for (int i = 0; i < gb.getBoard().length; i++) {
-			for (int j = 0; j < gb.getBoard().length; j++) {
-				sf = gb.getBoard()[i][j];
+		for (int i = 0; i < gb.length; i++) {
+			for (int j = 0; j < gb.length; j++) {
+				sf = gb[i][j];
 				if (sf == null);
 				else if(sf.getSite() == s){
 					for(int k = 0; sf.movement()[k][1] != -1;k++){
-						result[counter] = sf.movement()[k];
+						int[] temp = new int[]{j,i,0,0};
+						System.arraycopy(sf.movement()[k], 0, temp, 2, sf.movement()[k].length);
+						//System.out.println(temp);
+						result[counter] = temp;
 						counter++;
 						//System.out.println("x: "+sf.movement()[k][0] +" y: " +sf.movement()[k][1]);
 					}
@@ -138,32 +141,45 @@ public class Gameboard {
 		return result;
 	}
 	
-	public static boolean calculatecheck(Gameboard gb, int x, int y){
-		Spielfigur[][] b = gb.getBoard();
+	public static boolean calculatecheck(Spielfigur[][] b, int x, int y){
 	//	if(b[x][y] == null || b[x][y].getName() != "K")
 	//		return false;
 	//	System.out.println(b[x][y].getSite()== "w" ? "b" : "w");
-		int[][] allmoves = getallsidemoves(gb, b[x][y].getSite() == "w" ? "b" : "w");
+		int[][] allmoves = getallsidemoves(b, b[x][y].getSite() == "w" ? "b" : "w");
 		for(int i = 0; allmoves[i][0] != -1; i++){
 			//System.out.println("i,0: "+allmoves[i][0] + " i,1: "+allmoves[i][1]);
-			if(allmoves[i][0] == y && allmoves[i][1] == x)
+			if(allmoves[i][2] == y && allmoves[i][3] == x)
 				return true;
 		}
 		
 		return false;
 	}
 
-	public static boolean calculatecheckmate(Gameboard gb, String s, int[] arr){
-		int[][] allmoves1 = getallsidemoves(gb, s);
-		int[][] allmoves2 = getallsidemoves(gb, s == "w" ? "b" : "w");
-		Spielfigur[][] bo = Arrays.copyOf(board, board.length);
+	public static boolean calculatecheckmate(Spielfigur[][] sfar, String s, int[] arr){
+		int[][] allmoves1 = getallsidemoves(sfar, s);
+		int[][] allmoves2 = getallsidemoves(sfar, s == "w" ? "b" : "w");
 		
+		Spielfigur[][] bo;
 		if(allmoves1[0][0] == -1)
 			return true;
-		for(int i = 0; allmoves1[i][0] != 1;i++){
-			//if()
+		else if(!calculatecheck(sfar, getFigure(sfar, s, "K")[0], getFigure(sfar, s, "K")[1])){
+			return false;
 		}
-		return false;
+		for(int i = 0; allmoves1[i][0] != -1;i++){
+			System.out.println("a: "+ allmoves1[i][0] + " b: " +allmoves1[i][1] + " c: " +allmoves1[i][2] + " d: "+ allmoves1[i][3]);
+			bo = copyarray(sfar);
+			bo = nextStep(bo, allmoves1[i][1],allmoves1[i][0],allmoves1[i][3],allmoves1[i][2]);
+			if(sfar.equals(bo))
+				System.out.println("sfar equals bo");
+			int[] tmp = getFigure(bo, s, "K");
+			if(!calculatecheck(bo, tmp[0], tmp[1])){
+				bo = null;
+				return false;
+			}
+			bo = null;
+			//bo = nextStep(bo, allmoves1[i][3],allmoves1[i][2],allmoves1[i][1],allmoves1[i][0]);
+		}
+		return true;
 	}
 	
 	public static Spielfigur[][] copyarray(Spielfigur[][] sfar){
@@ -174,8 +190,8 @@ public class Gameboard {
 
 
 
-	public static void evaluatevalidmoves(Gameboard gb, int x, int y){
-		Spielfigur sf = gb.getBoard()[x][y];
+	public static void evaluatevalidmoves(Spielfigur[][] sfar, int x, int y){
+		Spielfigur sf = sfar[x][y];
 		int[] tmp = new int[2];
 		int[][] moves = new int[30][2];
 		int cnt = 0;
@@ -200,7 +216,7 @@ public class Gameboard {
 							//System.out.println(validmove(sf, y,x,tmp[0],tmp[1]));
 
 							//System.out.println("" + x + y);
-							if(validmove(sf, x,y,tmp[1],tmp[0])){
+							if(validmove(sfar, sf, x,y,tmp[1],tmp[0])){
 								//System.out.println(tmp[0]);
 								moves[cnt] = new int[]{y+i,x-j};
 								sf.setmoves(moves);
@@ -220,7 +236,7 @@ public class Gameboard {
 						else{
 							//System.out.println(sf.getSite() + x + y + tmp[1] + tmp[0]);
 							//System.out.println(validmove(board[x][y],x,y, tmp[1],tmp[0]));
-							if(validmove(sf, x,y,tmp[1],tmp[0])){
+							if(validmove(sfar, sf, x,y,tmp[1],tmp[0])){
 
 								moves[cnt] = new int[]{y+i,x+j};
 								sf.setmoves(moves);
@@ -236,7 +252,7 @@ public class Gameboard {
 			for (int i = 0; i < 8; i++) {
 				for (int j = 0; j < 8; j++) {
 
-					if(validmove(sf, x,y,j,i)){
+					if(validmove(sfar, sf, x,y,j,i)){
 						//System.out.println("+1");
 						moves[cnt] = new int[]{i,j};
 						sf.setmoves(moves);
@@ -252,7 +268,7 @@ public class Gameboard {
 			for (int i = 0; i < 8; i++) {
 				for (int j = 0; j < 8; j++) {
 
-					if(validmove(sf, x,y,i,j)){
+					if(validmove(sfar, sf, x,y,i,j)){
 						tmp[0] = i;
 						tmp[1] = j;
 						moves[cnt] = new int[]{j,i};
@@ -267,7 +283,7 @@ public class Gameboard {
 			for (int i = 0; i < 8; i++) {
 				for (int j = 0; j < 8; j++) {
 
-					if(validmove(sf, x,y,i,j)){
+					if(validmove(sfar, sf, x,y,i,j)){
 						tmp[0] = i;
 						tmp[1] = j;
 						moves[cnt] = new int[]{j,i};
@@ -282,7 +298,7 @@ public class Gameboard {
 			for (int i = 0; i < 8; i++) {
 				for (int j = 0; j < 8; j++) {
 
-					if(validmove(sf, x,y,i,j)){
+					if(validmove(sfar, sf, x,y,i,j)){
 						tmp[0] = i;
 						tmp[1] = j;
 						moves[cnt] = new int[]{j,i};
@@ -298,7 +314,7 @@ public class Gameboard {
 			for (int i = 0; i < 8; i++) {
 				for (int j = 0; j < 8; j++) {
 
-					if(validmove(sf, x,y,i,j)){
+					if(validmove(sfar, sf, x,y,i,j)){
 						tmp[0] = i;
 						tmp[1] = j;
 						moves[cnt] = new int[]{j,i};
@@ -338,7 +354,7 @@ public class Gameboard {
 
 
 	// takes a Spielfigur and their x-coordinate(j), y -coordinate(i) and the x(l)- and y(k)-coordinate from its destination point
-	private static boolean validmove(Spielfigur sf, int i, int j, int k, int l){
+	private static boolean validmove(Spielfigur[][] sfar, Spielfigur sf, int i, int j, int k, int l){
 
 		if(k > 7 || k < 0 || l > 7 || l< 0 || (i == k && j == l))
 			return false;
@@ -346,26 +362,26 @@ public class Gameboard {
 		case "B":
 			if(sf.getSite()== "w"){
 				if(j == l){
-					if(board[k][l] == null && (k == (i-1)||(k == (i-2) && i == 6&& board[i-1][l] == null)))
+					if(sfar[k][l] == null && (k == (i-1)||(k == (i-2) && i == 6&& sfar[i-1][l] == null)))
 						return true;
 				}
-				if(board[k][l] != null && board[k][l].getSite() != board[i][j].getSite() &&((k == (i-1) && l == (j+1))||(k == (i-1) && l == (j-1))))
+				if(sfar[k][l] != null && sfar[k][l].getSite() != sfar[i][j].getSite() &&((k == (i-1) && l == (j+1))||(k == (i-1) && l == (j-1))))
 					return true;
 			}
 			else if(sf.getSite()== "b"){
 				if(j == l){
-					if(board[k][l] == null && (k == (i+1)||(k == (i+2) && i == 1 && board[i+1][l] == null)))
+					if(sfar[k][l] == null && (k == (i+1)||(k == (i+2) && i == 1 && sfar[i+1][l] == null)))
 						return true;
 
 				}
-				if(board[k][l] != null &&board[k][l].getSite() != board[i][j].getSite() && ((k == (i+1) && l == (j+1))||(k == (i+1) && l == (j-1))))
+				if(sfar[k][l] != null &&sfar[k][l].getSite() != sfar[i][j].getSite() && ((k == (i+1) && l == (j+1))||(k == (i+1) && l == (j-1))))
 					return true;
 			} 
 			return false;
 		case "L":
-			return validL(sf,i,j,k,l);
+			return validL(sfar, sf,i,j,k,l);
 		case "K":
-			if(board[k][l] == null ||sf.getSite() != board[k][l].getSite()){
+			if(sfar[k][l] == null ||sf.getSite() != sfar[k][l].getSite()){
 				if((Math.abs(k-i) == 1 && Math.abs(l-j) == 1) || (Math.abs(l-j) == 1 && Math.abs(k-i) == 0) || (Math.abs(k-i) == 1 && Math.abs(l-j) == 0))
 					return true;
 				else return false;
@@ -373,9 +389,9 @@ public class Gameboard {
 			else
 				return false;
 		case "D":
-			return (validT(sf,i,j,k,l) ? true : validL(sf,i,j,k,l));
+			return (validT(sfar, sf,i,j,k,l) ? true : validL(sfar, sf,i,j,k,l));
 		case "S":
-			if(board[k][l] == null ||sf.getSite() != board[k][l].getSite()){
+			if(sfar[k][l] == null ||sf.getSite() != sfar[k][l].getSite()){
 				if((Math.abs(k-i) == 1 && Math.abs(l-j) == 2)||Math.abs(k-i) == 2 && Math.abs(l-j) == 1)
 					return true;
 				else
@@ -383,16 +399,16 @@ public class Gameboard {
 			}
 			else return false;
 		case "T":
-			return validT(sf, i, j, k , l);
+			return validT(sfar, sf, i, j, k , l);
 		}
 		
 
 		return false;//rochade(sf,i,j,k,l);
 	}
 	//checks if the Läufer did a valid move
-	private static boolean validL(Spielfigur sf, int i, int j, int k, int l){
-		if(board[k][l] == null ||sf.getSite() != board[k][l].getSite()){
-			if((Math.abs(i-k) == Math.abs(j-l) && checkBetween(i,j,k,l))){
+	private static boolean validL(Spielfigur[][] sfar, Spielfigur sf, int i, int j, int k, int l){
+		if(sfar[k][l] == null ||sf.getSite() != sfar[k][l].getSite()){
+			if((Math.abs(i-k) == Math.abs(j-l) && checkBetween(sfar, i,j,k,l))){
 				return true;
 			}
 			else
@@ -402,9 +418,9 @@ public class Gameboard {
 			return false;
 	}
 	//check of the Turm did a valid move
-	private static boolean validT(Spielfigur sf, int i, int j, int k, int l){
-		if(board[k][l] == null ||sf.getSite() != board[k][l].getSite()){
-			if(((Math.abs(i-k) == 0 || Math.abs(j-l) == 0) && checkBetween(i,j,k,l))){
+	private static boolean validT(Spielfigur[][] sfar, Spielfigur sf, int i, int j, int k, int l){
+		if(sfar[k][l] == null ||sf.getSite() != sfar[k][l].getSite()){
+			if(((Math.abs(i-k) == 0 || Math.abs(j-l) == 0) && checkBetween(sfar, i,j,k,l))){
 				return true;
 			}
 			else
@@ -413,7 +429,7 @@ public class Gameboard {
 		else
 			return false;
 	}
-	
+/*	
 	private boolean rochade(Spielfigur sf, int i, int j, int k, int l){
 		if(board[k][l] == null ||sf.getSite() != board[k][l].getSite()){
 			int x = getFigure(this, "w", "T")[0];
@@ -432,9 +448,10 @@ public class Gameboard {
 		
 		return false;
 	}
+	*/
 
 	// checks if between i/j and k/l are just free spaces
-	private static boolean checkBetween(int i, int j, int k, int l){
+	private static boolean checkBetween(Spielfigur[][] sfar, int i, int j, int k, int l){
 		int z = i-k;
 		int y = j-l;
 		int x = 0;
@@ -443,7 +460,7 @@ public class Gameboard {
 		if(z == 0){
 			while(Math.abs(y) > 0){ 
 				if (x == 0);
-				else if (board[i][j-y] != null)
+				else if (sfar[i][j-y] != null)
 					return false;
 				if(y > 0)
 					y--;
@@ -457,7 +474,7 @@ public class Gameboard {
 		if(y == 0){
 			while(Math.abs(z) > 0){ 
 				if(x == 0);
-				else if (board[i-z][j] != null)
+				else if (sfar[i-z][j] != null)
 					return false;
 				if(z > 0)
 					z--;
@@ -474,7 +491,7 @@ public class Gameboard {
 			while(Math.abs(z) != Math.abs(w)){
 				if(x == 0  && w == 0);
 
-				else if (board[i+w][j+x] != null) 
+				else if (sfar[i+w][j+x] != null) 
 					return false;
 
 				if(y > 0)
@@ -502,24 +519,41 @@ public class Gameboard {
 	public boolean getValidTurn(){
 		return validTurn;
 	}
+	
+	public static Spielfigur[][] rightnextStep(Spielfigur[][] sfar,int i, int j, int k, int l){
+		if(sfar[i][j] == null)
+			return sfar;
+		if((sfar[i][j] == null ||Player1 && sfar[i][j].getSite() == "w")||(!Player1 && sfar[i][j].getSite() == "b"))
+			return sfar;
+		validTurn = validmove(sfar, sfar[i][j],i,j, k,l);
+
+		if(validTurn){
+			sfar[k][l] = sfar[i][j];
+			sfar[i][j] = null;
+			Player1 = !Player1;
+			//evaluateall(sfar);
+			return sfar;
+		}
+		else return sfar;
+
+
+	}
+
 
 
 	// calcs the next step, inverts the current player
-	public Spielfigur[][] nextStep(int i, int j, int k, int l){
-		if(board[i][j] == null)
-			return board;
-		if((board[i][j] == null ||Player1 && board[i][j].getSite() == "w")||(!Player1 && board[i][j].getSite() == "b"))
-			return board;
-		validTurn = validmove(board[i][j],i,j, k,l);
+	public static Spielfigur[][] nextStep(Spielfigur[][] sfar,int i, int j, int k, int l){
+		if(sfar[i][j] == null)
+			return sfar;
+		validTurn = validmove(sfar, sfar[i][j],i,j, k,l);
 
 		if(validTurn){
-			board[k][l] = board[i][j];
-			board[i][j] = null;
-			Player1 = !Player1;
-			evaluateall(this);
-			return board;
+			sfar[k][l] = sfar[i][j];
+			sfar[i][j] = null;
+			evaluateall(sfar);
+			return sfar;
 		}
-		else return board;
+		else return sfar;
 
 
 	}

@@ -5,6 +5,7 @@ import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -38,6 +39,8 @@ public class graphics implements ActionListener{
 	private JScrollPane scrol;
 
 	private static Minimax minmax;
+	
+	private Spielfigur[][] copy;
 
 
 
@@ -117,22 +120,28 @@ public class graphics implements ActionListener{
 		//Gameboard temp = board;
 		if(clicked){
 			//System.out.println(""+ firstclicked[0]+ firstclicked[1]+ x+ y);
-			board.nextStep(firstclicked[0], firstclicked[1], x, y);
+			board.rightnextStep(board.getBoard(),firstclicked[0], firstclicked[1], x, y);
+			
 			paintGameboard();
-			Gameboard.evaluateall(board);
-			if(Gameboard.getFigure(board, "b", "K") ==  null);
+			
+			Gameboard.evaluateall(board.getBoard());
+			String g = (Gameboard.getPlayer() ? "b" : "w");
+			if(Gameboard.getFigure(board.getBoard(), "b", "K") ==  null);
 			else{
-				int a =  Gameboard.getFigure(board, "b", "K")[0];
-				int b =  Gameboard.getFigure(board, "b", "K")[1];
+				int a =  Gameboard.getFigure(board.getBoard(), g, "K")[0];
+				int b =  Gameboard.getFigure(board.getBoard(), g, "K")[1];
 				System.out.println(Gameboard.copy[0][0]);
 				//System.out.println("a: "+a+" b: "+b);
-				if(Gameboard.calculatecheck(board,a ,b)){
+				if(Gameboard.calculatecheck(Gameboard.copyarray(board.getBoard()),a ,b)){
 					bar[a][b].setBackground(new Color(255,69,0));
 				}
 			}
+			copy = deepCopy(board.getBoard());
 			String s = StartGame.checkwinner(board);
-		//	System.out.println(Gameboard.calculatecheckmate(board, "w", Gameboard.getKing(board, "b")));
-			if(s != "nowin" || Gameboard.calculatecheckmate(board, "w", Gameboard.getFigure(board, "b", "K"))){
+			
+			//Gameboard.copy = Gameboard.copyarray(board.getBoard());
+			//System.out.println(Gameboard.calculatecheckmate(board, g, Gameboard.getFigure(board.getBoard(), g, "K")));
+			if(s != "nowin" || Gameboard.calculatecheckmate(copy, g, Gameboard.getFigure(board.getBoard(), g, "K"))){
 				if(s != "unentschieden"){
 					if(!Gameboard.getPlayer())
 						JOptionPane.showMessageDialog(mypanel, "The Winner is Player 1");
@@ -146,6 +155,8 @@ public class graphics implements ActionListener{
 
 
 			}
+			Gameboard.evaluateall(board.getBoard());
+			//paintGameboard();
 		}
 		else{
 			System.out.println(minmax.getBoard().getBoard()[0][1]);
@@ -165,6 +176,19 @@ public class graphics implements ActionListener{
 		clicked = !clicked;
 	}
 
+	public static Spielfigur[][] deepCopy(Spielfigur[][] original) {
+	    if (original == null) {
+	        return null;
+	    }
+
+	    final Spielfigur[][] result = new Spielfigur[original.length][];
+	    for (int i = 0; i < original.length; i++) {
+	        result[i] = Arrays.copyOf(original[i], original[i].length);
+	        // For Java versions prior to Java 6 use the next:
+	        // System.arraycopy(original[i], 0, result[i], 0, original[i].length);
+	    }
+	    return result;
+	}
 
 
 	public void paintGameboard(){
