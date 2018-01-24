@@ -55,7 +55,7 @@ public class graphics implements ActionListener{
 		myframe.setMinimumSize(new Dimension(650,650));
 		board = new Gameboard();
 		Gameboard.copy = Gameboard.copyarray(board.getBoard());
-		minmax = new Minimax(board);
+		//minmax = new Minimax(board);
 		//board.initGameboard();
 		mypanel = new JPanel();
 		Console = new JPanel();
@@ -156,10 +156,32 @@ public class graphics implements ActionListener{
 
 			}
 			Gameboard.evaluateall(board.getBoard());
+			
+			//System.out.println(Minimax.evaluate(board.getBoard()));
+			
+			Minimax mx = new Minimax(board);
+			
+			board.rightnextStep(board.getBoard(),mx.getmove()[1], mx.getmove()[0],mx.getmove()[3], mx.getmove()[2]);
+			paintGameboard();
+			Gameboard.evaluateall(board.getBoard());
+			
+			if(Gameboard.getFigure(board.getBoard(), "b", "K") ==  null);
+			else{
+				int a =  Gameboard.getFigure(board.getBoard(), g, "K")[0];
+				int b =  Gameboard.getFigure(board.getBoard(), g, "K")[1];
+				System.out.println(Gameboard.copy[0][0]);
+				//System.out.println("a: "+a+" b: "+b);
+				if(Gameboard.calculatecheck(Gameboard.copyarray(board.getBoard()),a ,b)){
+					bar[a][b].setBackground(new Color(255,69,0));
+				}
+				}
+			bar[mx.getmove()[1]][mx.getmove()[0]].setBackground(new Color(255,69,0));
+			bar[mx.getmove()[3]][mx.getmove()[2]].setBackground(new Color(255,69,0));
 			//paintGameboard();
+			 
 		}
 		else{
-			System.out.println(minmax.getBoard().getBoard()[0][1]);
+			//System.out.println(minmax.getBoard()[0][1]);
 			firstclicked = new int[]{x,y};
 
 			bar[x][y].setBackground(new Color(255,69,0));
