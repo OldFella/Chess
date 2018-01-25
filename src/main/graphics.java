@@ -25,6 +25,8 @@ public class graphics implements ActionListener{
 	private JPanel mypanel;
 
 	private boolean clicked;
+	
+	private boolean bot;
 
 	private Gameboard board;
 
@@ -101,6 +103,20 @@ public class graphics implements ActionListener{
 		});
 		menu.add(menuItem);
 		jmb.add(menu);
+		JMenu men = new JMenu("Player");
+		JMenuItem jmi = new JMenuItem("Bot");
+		men.setMnemonic(KeyEvent.VK_G);
+		bot = false;
+		jmi.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				bot = !bot;
+			}
+		});
+		men.add(jmi);
+		jmb.add(men);
 		myframe.setJMenuBar(jmb);
 		myframe.setVisible(true);
 	}
@@ -133,7 +149,7 @@ public class graphics implements ActionListener{
 				System.out.println(Gameboard.copy[0][0]);
 				//System.out.println("a: "+a+" b: "+b);
 				if(Gameboard.calculatecheck(Gameboard.copyarray(board.getBoard()),a ,b)){
-					bar[a][b].setBackground(new Color(255,69,0));
+					bar[a][b].setBackground(new Color(220,60,80));
 				}
 			}
 			copy = deepCopy(board.getBoard());
@@ -158,6 +174,7 @@ public class graphics implements ActionListener{
 			Gameboard.evaluateall(board.getBoard());
 			
 			//System.out.println(Minimax.evaluate(board.getBoard()));
+			if(bot){
 			
 			Minimax mx = new Minimax(board);
 			
@@ -172,19 +189,20 @@ public class graphics implements ActionListener{
 				System.out.println(Gameboard.copy[0][0]);
 				//System.out.println("a: "+a+" b: "+b);
 				if(Gameboard.calculatecheck(Gameboard.copyarray(board.getBoard()),a ,b)){
-					bar[a][b].setBackground(new Color(255,69,0));
+					bar[a][b].setBackground(new Color(220,60,80));
 				}
 				}
-			bar[mx.getmove()[1]][mx.getmove()[0]].setBackground(new Color(255,69,0));
-			bar[mx.getmove()[3]][mx.getmove()[2]].setBackground(new Color(255,69,0));
+			bar[mx.getmove()[1]][mx.getmove()[0]].setBackground(new Color(220,60,80));
+			bar[mx.getmove()[3]][mx.getmove()[2]].setBackground(new Color(220,60,80));
 			//paintGameboard();
+			  }
 			 
 		}
 		else{
 			//System.out.println(minmax.getBoard()[0][1]);
 			firstclicked = new int[]{x,y};
 
-			bar[x][y].setBackground(new Color(255,69,0));
+			bar[x][y].setBackground(new Color(220,60,80));
 
 			int[][] valmoves = Gameboard.getvalidmoves(board.getBoard()[x][y]);
 
@@ -231,10 +249,10 @@ public class graphics implements ActionListener{
 
 
 				if((counter % 2 == 0 && cnt % 2 == 0)|| (counter % 2 == 1 && cnt % 2 == 1)){
-					b = new Color(205,104,57);
+					b = new Color(139,71,38); //
 				}
 				else{
-					b = new Color(255,222,173);
+					b = new Color(244,164,96);
 				}
 
 
